@@ -19,13 +19,13 @@ class Plugin_Evacuation(WaypointPlugin):
         since more relaible methods of integration like ode45 and monto carlo take a lot a computational power.
         '''
         tau = 1                                         # time-step (s), TODO: figure out right value
-        num_steps = 1                                   # the number of force-calculation steps the simulation should go through (each callback should be 1 step?)
+        num_steps = 2                                   # the number of force-calculation steps the simulation should go through (each callback should be 1 step?)
         room_size = 500                                 # size of square room (m), TODO: has to be deleted or changed
         room = Room("square", room_size)                # kind of room the simulation runs in, TODO: has to be deleted or changed
         method = getattr(Integrators, "leap_frog")      # method used for integration -> leap-frog was the GoTo solution in the original project
         N = len(data.agents)                            # quantity of pedestrians aka the number of agents that are currently in the simulation
         
-        v = np.zeros((2, N, num_steps))                 # Three dimensional array of velocity, TODO: figure out right value
+        v = np.zeros((2, N, num_steps))                 # Three dimensional array of velocity, not used in leap frog strangely
         y = np.zeros((2, N, num_steps))                 # Three dimensional array of place: x = coordinates, y = Agent, z=Time, TODO: figure out right value
         for i in range(N):
             x = data.agents[i].pose.position.x
@@ -40,6 +40,7 @@ class Plugin_Evacuation(WaypointPlugin):
         diff_equ = Diff_Equ(N, room_size, tau, room, radii, m)  # initialize Differential equation
 
         # calls the method of integration with the starting positions, diffequatial equation, number of steps, and delta t = tau
+        # v is not used in leap frog (why?)
         y, agents_escaped, forces = method(y[:, :, 0], v[:, :, 0], diff_equ.f, num_steps, tau, room)
            
         feedbacks = []

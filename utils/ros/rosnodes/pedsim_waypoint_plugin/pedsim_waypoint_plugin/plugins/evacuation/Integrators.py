@@ -90,6 +90,7 @@ def leap_frog(y0, v0, f, N_steps, dt, room):
         a[:,:,k] = f(y[:,:,k], v[:,:,k])
         v[:,:,k+1] = v[:,:,k] + dt*f(y[:,:,k+1], v[:,:,k] + dt*a[:,:,k])
 
+        """
         for i in range(y.shape[1]):
             # checks if there are two destination and calculates the distance to the closets destination
             destination = np.zeros(len(room.get_destination()))
@@ -104,6 +105,7 @@ def leap_frog(y0, v0, f, N_steps, dt, room):
                 tmp += 1             
 
         agents_escaped[k+1] = tmp
+        """
 
     return y, agents_escaped, a
 
